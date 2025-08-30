@@ -221,16 +221,38 @@ footer {
 /* ---------------- SIMON SAYS ---------------- */
 .simon-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
+    gap: 15px;
     margin-top: 10px;
+    justify-items: center;
+    align-items: center;
 }
+
 .simon-btn {
-    padding: 40px;
-    border-radius: 8px;
+    width: 120px;
+    height: 120px;
+    border-radius: 15px;
     cursor: pointer;
-    font-size: 24px;
+    opacity: 0.9;
+    transition: all 0.3s;
+    border: 3px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
     color: #000;
+}
+
+/* Pastel background colors */
+.simon-btn.green { background-color: #a8e6cf; color: #000; }
+.simon-btn.red { background-color: #ff8b94; color: #000; }
+.simon-btn.yellow { background-color: #fff3b0; color: #000; }
+.simon-btn.blue { background-color: #89cff0; color: #000; }
+
+/* Glow effect during sequence */
+.simon-btn.active {
+    opacity: 1;
+    box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
 }
 
 /* Rating ekhane  */
