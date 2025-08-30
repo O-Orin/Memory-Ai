@@ -1,3 +1,4 @@
+/* ---------------- NAV ITEMS ---------------- */
 const navItems = [
   ["home", "Intro"],
   ["cards", "Cards"],
@@ -19,9 +20,7 @@ function renderNav() {
     const btn = document.createElement("button");
     btn.textContent = label;
     if (id === currentPage) btn.classList.add("active");
-    btn.onclick = () => {
-      navigateTo(id);
-    };
+    btn.onclick = () => navigateTo(id);
     nav.appendChild(btn);
   });
 }
@@ -29,7 +28,7 @@ function renderNav() {
 function navigateTo(page) {
   currentPage = page;
   renderPage();
-  document.getElementById("mainNav").classList.remove("open"); // close on mobile
+  document.getElementById("mainNav").classList.remove("open");
 }
 
 /* ---------------- PAGE RENDER ---------------- */
@@ -81,33 +80,30 @@ function renderPage() {
     content.innerHTML = `<h2>Quiz</h2>
     <iframe src="https://near.tl/sm/tqnePQO28" width="100%" height="600"></iframe>`;
   } else if (currentPage === "rate") {
-  content.innerHTML = `
-    <h2>Rate This Website</h2>
-    <div class="rating" id="stars"></div>
-    <div id="ratingText"></div>
-  `;
-
-  // dynamically create 5 stars
-  const starsContainer = document.getElementById("stars");
-  for (let i = 1; i <= 5; i++) {
-    const star = document.createElement("span");
-    star.textContent = "★";
-    star.dataset.value = i;
-    starsContainer.appendChild(star);
+    content.innerHTML = `
+      <h2>Rate This Website</h2>
+      <div class="rating" id="stars"></div>
+      <div id="ratingText"></div>
+    `;
+    const starsContainer = document.getElementById("stars");
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement("span");
+      star.textContent = "★";
+      star.dataset.value = i;
+      starsContainer.appendChild(star);
+    }
+    renderRating();
   }
-
-  renderRating(); // initialize interactivity
-}
-
 }
 
 /* ---------------- MEMORY GAME ---------------- */
+let first = null, lock = false, turns = 0, matches = 0;
+
 function renderMemory() {
   const emojis = ["🌸", "🍕", "🐱", "⚽", "🎵", "🚗", "🌍", "🔥", "🍎", "🐶"];
   const pairs = emojis.slice(0, 10).flatMap((e) => [e, e]);
   const deck = shuffle(pairs);
-  let html =
-    "<div class='memory-grid' style='grid-template-columns:repeat(5,1fr)'>";
+  let html = "<div class='memory-grid' style='grid-template-columns:repeat(5,1fr)'>";
   deck.forEach((em) => {
     html += `
       <div class="memory-card" data-emoji="${em}" onclick="flipCard(this)">
@@ -118,18 +114,10 @@ function renderMemory() {
   html += "</div><div id='memory-stats'></div>";
   document.getElementById("memory").innerHTML = html;
 
-  first = null;
-  lock = false;
-  turns = 0;
-  matches = 0;
+  first = null; lock = false; turns = 0; matches = 0;
   document.getElementById("memory-stats").textContent =
     "Turns: 0 | Matches: 0";
 }
-
-let first = null,
-  lock = false,
-  turns = 0,
-  matches = 0;
 
 function flipCard(card) {
   if (lock || card.classList.contains("flipped")) return;
@@ -165,16 +153,13 @@ function shuffle(arr) {
 }
 
 /* ---------------- SIMON SAYS ---------------- */
-let sequence = [],
-  userSeq = [],
-  playing = false,
-  round = 0;
+let sequence = [], userSeq = [], playing = false, round = 0;
 
 function renderSimon() {
-  const colors = ["red", "green", "blue", "yellow"];
+  const colors = ["green", "red", "yellow", "blue"];
   let html = "<h3>Simon Says</h3><div class='simon-grid'>";
-  colors.forEach((c, i) => {
-    html += `<div class="simon-btn" style="background:${c}" onclick="pressSimon(${i})"></div>`;
+  colors.forEach((c) => {
+    html += `<div class="simon-btn ${c}" data-color="${c}"></div>`;
   });
   html += "</div>";
   html += `<div style="margin-top:10px">
@@ -184,13 +169,16 @@ function renderSimon() {
     <div id="simonMsg" style="margin-top:6px;color:#ff8080"></div>
   </div>`;
   document.getElementById("simon").innerHTML = html;
+
+  document.querySelectorAll(".simon-btn").forEach(btn => {
+    btn.onclick = () => pressSimon(btn.dataset.color);
+  });
 }
 
 async function startSimon() {
   userSeq = [];
   document.getElementById("simonMsg").textContent = "";
 
-  // ensure next color is different from the last
   let next;
   do {
     next = Math.floor(Math.random() * 4);
@@ -201,39 +189,71 @@ async function startSimon() {
   document.getElementById("roundCount").textContent = round;
   playing = true;
 
+  const buttons = document.querySelectorAll(".simon-btn");
   for (let i = 0; i < sequence.length; i++) {
     const idx = sequence[i];
-    const pad = document.querySelectorAll(".simon-btn")[idx];
-    pad.style.filter = "brightness(1.5)";
-    await new Promise((res) => setTimeout(res, 400));
-    pad.style.filter = "brightness(1)";
-    await new Promise((res) => setTimeout(res, 200));
+    const pad = buttons[idx];
+    pad.classList.add("active");
+    await new Promise(r => setTimeout(r, 400));
+    pad.classList.remove("active");
+    await new Promise(r => setTimeout(r, 200));
   }
   playing = false;
 }
 
-function pressSimon(i) {
+function pressSimon(color) {
   if (playing) return;
-  userSeq.push(i);
-  if (userSeq[userSeq.length - 1] !== sequence[userSeq.length - 1]) {
-    document.getElementById(
-      "simonMsg"
-    ).textContent = `You lost! Rounds passed: ${round - 1}`;
-    sequence = [];
-    userSeq = [];
-    round = 0;
+
+  const idx = ["green", "red", "yellow", "blue"].indexOf(color);
+  const expectedIdx = sequence[userSeq.length];
+  userSeq.push(idx);
+
+  const pad = document.querySelector(`.simon-btn.${color}`);
+  pad.classList.add("active");
+  setTimeout(() => pad.classList.remove("active"), 400);
+
+  if (userSeq[userSeq.length - 1] !== expectedIdx) {
+    document.getElementById("simonMsg").textContent = `You lost! Rounds passed: ${round - 1}`;
+    sequence = []; userSeq = []; round = 0;
     document.getElementById("roundCount").textContent = 0;
   } else if (userSeq.length === sequence.length) {
-    setTimeout(() => startSimon(), 600);
+    setTimeout(startSimon, 1000);
   }
 }
 
 function resetSimon() {
-  sequence = [];
-  userSeq = [];
-  round = 0;
+  sequence = []; userSeq = []; round = 0;
   document.getElementById("roundCount").textContent = 0;
   document.getElementById("simonMsg").textContent = "";
+}
+
+/* ---------------- RATING ---------------- */
+function renderRating() {
+  const ratingText = {
+    5: "Thanks Top-G! Really appreciate it!",
+    4: "Great to know that you like it!",
+    3: "Neutral? Playing safe huh!",
+    2: "I will try to improve & thanks for the feedback!",
+    1: 'So you hate the website or hate me in general? :"('
+  };
+
+  const stars = document.querySelectorAll("#stars span");
+  let selectedRating = 0;
+
+  stars.forEach(star => {
+    star.addEventListener("mouseover", () => {
+      const val = Number(star.dataset.value);
+      stars.forEach(s => s.classList.toggle("hover", Number(s.dataset.value) <= val));
+    });
+    star.addEventListener("mouseout", () => {
+      stars.forEach(s => s.classList.remove("hover"));
+    });
+    star.addEventListener("click", () => {
+      selectedRating = Number(star.dataset.value);
+      stars.forEach(s => s.classList.toggle("selected", Number(s.dataset.value) <= selectedRating));
+      document.getElementById("ratingText").textContent = ratingText[selectedRating];
+    });
+  });
 }
 
 /* ---------------- MOBILE NAV TOGGLE ---------------- */
@@ -241,6 +261,5 @@ function toggleMenu() {
   document.getElementById("mainNav").classList.toggle("open");
 }
 
-/* Init */
+/* ---------------- INIT ---------------- */
 renderPage();
-
