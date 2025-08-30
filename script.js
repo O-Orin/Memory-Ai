@@ -37,41 +37,57 @@ function renderPage() {
 
   if (currentPage === "home") {
     content.innerHTML =
-      "<h1>Memory in the Age of AI</h1><p>Explore memory with interactive pages and games!</p>";
+      "<h1>Memory in the Age of AI</h1><p>A concise, research-informed walkthrough of how our memory works, how AI and technology change it, and practical ways to use those same tools to strengthen—not weaken—your mind.</p> <h2>What is Memory & How It Works</h2><p>Memory is learning that persists over time information that is encoded, stored, andretrieved. It links our experiences, skills, and knowledge into a coherent identity.<br><br>There are three types of memories. Let’s take a look at those:<br><br>1) Sensory Memory<br><br>2) Short-Term / Working<br><br>3) Long-Term Memory";
   } else if (currentPage === "cards") {
-    let html = "<h2>Interactive Cards</h2><div class='cards-grid'>";
-    for (let i = 0; i < 5; i++) {
-      if (i < 3) {
-        html += `
-        <div class="card" onclick="this.classList.toggle('flipped')">
-          <div class="card-inner">
-            <div class="card-front">Tap to Flip</div>
-            <div class="card-back">Content ${i + 1}</div>
-          </div>
-        </div>`;
-      } else {
-        html += `
-        <div class="card">
-          <div class="card-inner flipped">
-            <div class="card-front">Static</div>
-            <div class="card-back">Static Box</div>
-          </div>
-        </div>`;
-      }
-    }
-    html += "</div>";
-    content.innerHTML = html;
-  } else if (currentPage === "reveal") {
-    const points = [1, 2, 3, 4, 5, 6];
-    let html = "<h2>Tap to unblur</h2><div class='reveal-grid'>";
-    points.forEach((p) => {
-      html += `<div class="reveal-box blur" onclick="this.classList.remove('blur')">
-        <h3>Point ${p}</h3><p>Details for point ${p}</p>
+  // Keep your original intro paragraph
+  let html = "<h2>Technology & AI: Benefits — and the Bigger Risks </h2><p>Digital tools can help—but overreliance can erode focus and recall. Reminder apps & calendars reminds us about our chores, searching something online gives us access to quick information. Recently, addition of AI has helped us with remembering tasks. AI tools can take notes, give reminder, answer any question, even do our tasks for us. This all may seem like heaven but there are many hidden negative effects of the blessings of AI & technology.</p><p>Ready to see them?</p><div class='cards-grid'>";
+
+  const cardData = [
+    { front: "Cognitive Offloading", back: "We remember less because devices remember for us." },
+    { front: "The Google Effect", back: "We recall where to find info, not the info itself." },
+    { front: "Distraction Overload", back: "Attention splits → weaker working memory, poorer transfer to long-term." },
+    { front: "Algorithmic Bias", back: "Feeds reinforce certain items, shaping—or distorting—what we recall." },
+    { front: "Practice Loss", back: "Less self-driven recall → weaker memory skills over time." }
+  ];
+
+  cardData.forEach(card => {
+    html += `
+      <div class="card" onclick="this.classList.toggle('flipped')">
+        <div class="card-inner">
+          <div class="card-front">${card.front}</div>
+          <div class="card-back">${card.back}</div>
+        </div>
       </div>`;
-    });
-    html += "</div>";
-    content.innerHTML = html;
-  } else if (currentPage === "games") {
+  });
+
+  html += "</div>";
+  content.innerHTML = html;
+} else if (currentPage === "reveal") {
+  // Define your 6 boxes with custom texts
+  const revealBoxes = [
+    { title: "Active Learning Tools", text: "Use spaced-repetition and digital flashcards to force active recall and counter forgetting." },
+    { title: "Train Working Memory", text: "Short, regular exercises and games that hold/manipulate items can sharpen attention and capacity." },
+    { title: "Personalized AI Tutors", text: "Adaptive guidance organizes material for deeper processing and prompts recall instead of just giving answers." },
+    { title: "Reduce Passive Dependence", text: "Turn off non-essential notifications. Convert reminders into quick self-tests rather than auto surfacing." },
+    { title: "Support Habits", text: "Track sleep, breaks, and stress. Sleep consolidates memories; calm focus improves encoding." },
+    { title: "  Organize for Meaning", text: "Create hierarchies and chunk concepts. Link new ideas to prior knowledge to boost retrieval routes." }
+  ];
+
+  let html = "<h2>Tap to unblur</h2><div class='reveal-grid'>";
+  
+  // Loop through each box and add it
+  revealBoxes.forEach(box => {
+    html += `
+      <div class="reveal-box blur" onclick="this.classList.remove('blur')">
+        <h3>${box.title}</h3>
+        <p>${box.text}</p>
+      </div>
+    `;
+  });
+
+  html += "</div>";
+  content.innerHTML = html;
+} else if (currentPage === "games") {
     content.innerHTML =
       "<h2>Games</h2><div id='memory'></div><div id='simon'></div>";
     renderMemory();
@@ -100,7 +116,7 @@ function renderPage() {
 let first = null, lock = false, turns = 0, matches = 0;
 
 function renderMemory() {
-  const emojis = ["🌸", "🍕", "🐱", "⚽", "🎵", "🚗", "🌍", "🔥", "🍎", "🐶"];
+  const emojis = ["🌸", "🍕", "🐱", "⚽", "🎵", "🚗", "🌍", "🔥", "🍎", "👾"];
   const pairs = emojis.slice(0, 10).flatMap((e) => [e, e]);
   const deck = shuffle(pairs);
   let html = "<div class='memory-grid' style='grid-template-columns:repeat(5,1fr)'>";
@@ -153,14 +169,19 @@ function shuffle(arr) {
 }
 
 /* ---------------- SIMON SAYS ---------------- */
-let sequence = [], userSeq = [], playing = false, round = 0;
+let simonSequence = [];
+let userSequence = [];
+let simonPlaying = false;
+let simonRound = 0;
 
 function renderSimon() {
   const colors = ["green", "red", "yellow", "blue"];
   let html = "<h3>Simon Says</h3><div class='simon-grid'>";
-  colors.forEach((c) => {
+  
+  colors.forEach(c => {
     html += `<div class="simon-btn ${c}" data-color="${c}"></div>`;
   });
+  
   html += "</div>";
   html += `<div style="margin-top:10px">
     <button onclick="startSimon()">Start / Next</button>
@@ -168,65 +189,85 @@ function renderSimon() {
     <span style="margin-left:10px">Rounds: <span id="roundCount">0</span></span>
     <div id="simonMsg" style="margin-top:6px;color:#ff8080"></div>
   </div>`;
+  
   document.getElementById("simon").innerHTML = html;
 
+  // Set click handlers
   document.querySelectorAll(".simon-btn").forEach(btn => {
     btn.onclick = () => pressSimon(btn.dataset.color);
   });
 }
 
 async function startSimon() {
-  userSeq = [];
+  userSequence = [];
   document.getElementById("simonMsg").textContent = "";
 
+  // Add a new random color
+  const colors = ["green", "red", "yellow", "blue"];
   let next;
   do {
     next = Math.floor(Math.random() * 4);
-  } while (sequence.length && next === sequence[sequence.length - 1]);
-  sequence.push(next);
+  } while (simonSequence.length && next === simonSequence[simonSequence.length - 1]);
+  simonSequence.push(next);
 
-  round = sequence.length;
-  document.getElementById("roundCount").textContent = round;
-  playing = true;
+  simonRound = simonSequence.length;
+  document.getElementById("roundCount").textContent = simonRound;
+  simonPlaying = true;
 
   const buttons = document.querySelectorAll(".simon-btn");
-  for (let i = 0; i < sequence.length; i++) {
-    const idx = sequence[i];
-    const pad = buttons[idx];
-    pad.classList.add("active");
-    await new Promise(r => setTimeout(r, 400));
-    pad.classList.remove("active");
+
+  // Play the sequence
+  for (let i = 0; i < simonSequence.length; i++) {
+    const idx = simonSequence[i];
+    const btn = buttons[idx];
+
+    // Glow effect: background + border
+    btn.classList.add("active");
+    btn.style.boxShadow = `0 0 20px ${colors[idx]}, 0 0 40px ${colors[idx]}`;
+    
+    await new Promise(r => setTimeout(r, 500));
+    
+    btn.classList.remove("active");
+    btn.style.boxShadow = "none";
+
     await new Promise(r => setTimeout(r, 200));
   }
-  playing = false;
+
+  simonPlaying = false;
 }
 
 function pressSimon(color) {
-  if (playing) return;
+  if (simonPlaying) return;
 
-  const idx = ["green", "red", "yellow", "blue"].indexOf(color);
-  const expectedIdx = sequence[userSeq.length];
-  userSeq.push(idx);
+  const colors = ["green", "red", "yellow", "blue"];
+  const idx = colors.indexOf(color);
+  userSequence.push(idx);
 
-  const pad = document.querySelector(`.simon-btn.${color}`);
-  pad.classList.add("active");
-  setTimeout(() => pad.classList.remove("active"), 400);
+  // Glow feedback on click
+  const btn = document.querySelector(`.simon-btn.${color}`);
+  btn.classList.add("active");
+  btn.style.boxShadow = `0 0 20px ${color}, 0 0 40px ${color}`;
+  setTimeout(() => {
+    btn.classList.remove("active");
+    btn.style.boxShadow = "none";
+  }, 400);
 
-  if (userSeq[userSeq.length - 1] !== expectedIdx) {
-    document.getElementById("simonMsg").textContent = `You lost! Rounds passed: ${round - 1}`;
-    sequence = []; userSeq = []; round = 0;
-    document.getElementById("roundCount").textContent = 0;
-  } else if (userSeq.length === sequence.length) {
+  // Check user input
+  if (userSequence[userSequence.length - 1] !== simonSequence[userSequence.length - 1]) {
+    document.getElementById("simonMsg").textContent = `You lost! Rounds passed: ${simonRound - 1}`;
+    resetSimon();
+  } else if (userSequence.length === simonSequence.length) {
     setTimeout(startSimon, 1000);
   }
 }
 
 function resetSimon() {
-  sequence = []; userSeq = []; round = 0;
+  simonSequence = [];
+  userSequence = [];
+  simonRound = 0;
   document.getElementById("roundCount").textContent = 0;
   document.getElementById("simonMsg").textContent = "";
 }
-
 /* ---------------- RATING ---------------- */
 function renderRating() {
   const ratingText = {
