@@ -81,9 +81,24 @@ function renderPage() {
     content.innerHTML = `<h2>Quiz</h2>
     <iframe src="https://near.tl/sm/tqnePQO28" width="100%" height="600"></iframe>`;
   } else if (currentPage === "rate") {
-    content.innerHTML = `<h2>Rate This Website</h2>
-    <p>⭐ ⭐ ⭐ ⭐ ⭐</p>`;
+  content.innerHTML = `
+    <h2>Rate This Website</h2>
+    <div class="rating" id="stars"></div>
+    <div id="ratingText"></div>
+  `;
+
+  // dynamically create 5 stars
+  const starsContainer = document.getElementById("stars");
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement("span");
+    star.textContent = "★";
+    star.dataset.value = i;
+    starsContainer.appendChild(star);
   }
+
+  renderRating(); // initialize interactivity
+}
+
 }
 
 /* ---------------- MEMORY GAME ---------------- */
@@ -228,3 +243,4 @@ function toggleMenu() {
 
 /* Init */
 renderPage();
+
