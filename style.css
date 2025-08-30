@@ -1,0 +1,234 @@
+/* ---------------- BODY ---------------- */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#0f1724, #1e293b, #0b1226);
+    color: #e8ebff;
+}
+
+/* ---------------- NAVBAR ---------------- */
+header {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    width: 100%; /* full width */
+    z-index: 1000;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+nav#desktopNav {
+    display: flex;
+    flex-wrap: nowrap; /* prevent wrapping */
+    justify-content: center; /* center all buttons */
+    align-items: center; /* vertical alignment */
+    gap: 6px;
+    overflow-x: auto; /* scroll if buttons exceed width */
+    width: 100%; /* fill the header width */
+}
+
+nav#desktopNav button {
+    flex-shrink: 0; /* prevent shrinking */
+    white-space: nowrap; /* prevent text from breaking */
+    margin: 0 4px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: #333;
+    color: #fff;
+}
+
+nav#desktopNav button.active {
+    background: linear-gradient(to right, indigo, purple);
+}
+
+/* hide scrollbar for nav */
+nav#desktopNav::-webkit-scrollbar {
+    display: none;
+}
+nav#desktopNav {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Hamburger menu (mobile) */
+.menu-toggle {
+    display: none;
+    font-size: 26px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #fff;
+}
+
+/* ---------------- MOBILE STYLES ---------------- */
+@media (max-width: 768px) {
+    nav#desktopNav {
+        display: none; /* hide desktop nav */
+    }
+    /*.menu-toggle {*/
+    /*    display: block; !* show hamburger *!*/
+    /*    position: fixed;*/
+    /*    top: 10px;*/
+    /*    left: 10px;*/
+    /*    z-index: 1001;*/
+    /*}*/
+    /*.mobile-menu {*/
+    /*    display: none;*/
+    /*    position: fixed;*/
+    /*    top: 50px;*/
+    /*    left: 10px;*/
+    /*    background: #222;*/
+    /*    border-radius: 8px;*/
+    /*    padding: 10px;*/
+    /*    z-index: 1000;*/
+    /*}*/
+    /*.mobile-menu button {*/
+    /*    display: block;*/
+    /*    width: 100%;*/
+    /*    margin: 6px 0;*/
+    /*    padding: 8px 12px;*/
+    /*    border-radius: 6px;*/
+    /*    background: #333;*/
+    /*    color: #fff;*/
+    /*    border: none;*/
+    /*    text-align: left;*/
+    /*}*/
+    /*.mobile-menu button.active {*/
+    /*    background: linear-gradient(to right, indigo, purple);*/
+    /*}*/
+}
+
+/* ---------------- MAIN + FOOTER ---------------- */
+main {
+    padding: 90px 15px 80px;
+    max-width: 1000px;
+    margin: auto;
+}
+footer {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* ---------------- CARDS ---------------- */
+.card {
+    width: 150px;
+    height: 200px;
+    margin: 10px;
+    perspective: 1000px;
+    display: inline-block;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    justify-items: center;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+.card-front { background: indigo; color: #fff; }
+.card-back { background: lavender; color: #000; transform: rotateY(180deg); }
+
+/* ---------------- REVEAL PAGE ---------------- */
+.reveal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+.reveal-box {
+    background: linear-gradient(to bottom right, indigo, purple);
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 100px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.reveal-box p {
+    font-size: 14px;
+    margin-top: 8px;
+    opacity: 0.9;
+}
+.reveal-box.blur {
+    filter: blur(6px) brightness(0.7);
+}
+
+/* ---------------- MEMORY GAME ---------------- */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+.memory-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    cursor: pointer;
+}
+.memory-card .front,
+.memory-card .back {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    backface-visibility: hidden;
+}
+.memory-card .front { background: #333; }
+.memory-card .back {
+    background: #fff;
+    transform: rotateY(180deg);
+}
+.memory-card.flipped { transform: rotateY(180deg); }
+
+/* ---------------- SIMON SAYS ---------------- */
+.simon-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+.simon-btn {
+    padding: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #000;
+}
