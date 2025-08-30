@@ -8,97 +8,97 @@ body {
 
 /* ---------------- NAVBAR ---------------- */
 header {
-    position: fixed;
-    top: 10px;
-    left: 0;
-    width: 100%; /* full width */
-    z-index: 1000;
-    padding: 0 20px;
-    box-sizing: border-box;
+  position: fixed;
+  top: 10px;
+  left: 0;
+  width: 100%; /* full width */
+  z-index: 1000;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-nav#desktopNav {
-    display: flex;
-    flex-wrap: nowrap; /* prevent wrapping */
-    justify-content: center; /* center all buttons */
-    align-items: center; /* vertical alignment */
-    gap: 6px;
-    overflow-x: auto; /* scroll if buttons exceed width */
-    width: 100%; /* fill the header width */
+/* Single nav container */
+nav#mainNav {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  width: 100%;
 }
 
-nav#desktopNav button {
-    flex-shrink: 0; /* prevent shrinking */
-    white-space: nowrap; /* prevent text from breaking */
-    margin: 0 4px;
-    padding: 6px 12px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    background: #333;
-    color: #fff;
+nav#mainNav button {
+  flex-shrink: 0;
+  white-space: nowrap;
+  margin: 0 4px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #333;
+  color: #fff;
 }
 
-nav#desktopNav button.active {
-    background: linear-gradient(to right, indigo, purple);
+nav#mainNav button.active {
+  background: linear-gradient(to right, indigo, purple);
 }
 
 /* hide scrollbar for nav */
-nav#desktopNav::-webkit-scrollbar {
-    display: none;
+nav#mainNav::-webkit-scrollbar {
+  display: none;
 }
-nav#desktopNav {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+nav#mainNav {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Hamburger menu (mobile) */
+/* Hamburger menu (hidden on desktop) */
 .menu-toggle {
-    display: none;
-    font-size: 26px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #fff;
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #fff;
+  position: absolute;
+  left: 10px;
+  top: 10px;
 }
 
-/* ---------------- MOBILE STYLES ---------------- */
+/* ---------------- MOBILE ---------------- */
 @media (max-width: 768px) {
-    nav#desktopNav {
-        display: none; /* hide desktop nav */
-    }
-    /*.menu-toggle {*/
-    /*    display: block; !* show hamburger *!*/
-    /*    position: fixed;*/
-    /*    top: 10px;*/
-    /*    left: 10px;*/
-    /*    z-index: 1001;*/
-    /*}*/
-    /*.mobile-menu {*/
-    /*    display: none;*/
-    /*    position: fixed;*/
-    /*    top: 50px;*/
-    /*    left: 10px;*/
-    /*    background: #222;*/
-    /*    border-radius: 8px;*/
-    /*    padding: 10px;*/
-    /*    z-index: 1000;*/
-    /*}*/
-    /*.mobile-menu button {*/
-    /*    display: block;*/
-    /*    width: 100%;*/
-    /*    margin: 6px 0;*/
-    /*    padding: 8px 12px;*/
-    /*    border-radius: 6px;*/
-    /*    background: #333;*/
-    /*    color: #fff;*/
-    /*    border: none;*/
-    /*    text-align: left;*/
-    /*}*/
-    /*.mobile-menu button.active {*/
-    /*    background: linear-gradient(to right, indigo, purple);*/
-    /*}*/
+  nav#mainNav {
+    display: none; /* hidden until toggled */
+    flex-direction: column;
+    background: #222;
+    border-radius: 8px;
+    padding: 10px;
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    width: auto;
+  }
+
+  nav#mainNav.open {
+    display: flex;
+  }
+
+  nav#mainNav button {
+    display: block;
+    width: 100%;
+    margin: 6px 0;
+    text-align: left;
+  }
+
+  .menu-toggle {
+    display: block; /* show hamburger */
+  }
 }
+
 
 /* ---------------- MAIN + FOOTER ---------------- */
 main {
