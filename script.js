@@ -73,7 +73,7 @@ function renderPage() {
     { title: "  Organize for Meaning", text: "Create hierarchies and chunk concepts. Link new ideas to prior knowledge to boost retrieval routes." }
   ];
 
-  let html = "<h2>Tap to unblur</h2><div class='reveal-grid'>";
+  let html = "<h2>Use Technology to Strengthen Memory</h2><p>AI & technology does not need to be a threat for our memory. We can balance and use AI & tech or even use them to strengthen our own memory.</p> <p> Here are some tips on how you can do it!</p><div class='reveal-grid'>";
   
   // Loop through each box and add it
   revealBoxes.forEach(box => {
@@ -304,3 +304,4 @@ function toggleMenu() {
 
 /* ---------------- INIT ---------------- */
 renderPage();
+
